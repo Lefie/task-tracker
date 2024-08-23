@@ -3,7 +3,10 @@ const { Command } = require('commander');
 
 // import the fs module to read and write to file 
 const fs = require("fs")
-const fp = "./data/tasks.json"
+const path = require('path')
+const fp = path.join(__dirname,"/data/tasks.json")
+console.log("hellpw ")
+console.log(fp)
 
 // declare the `program` variable 
 const program = new Command();
@@ -65,7 +68,6 @@ program
                     console.log("Task Added Successfully (ID: )", task_obj.id)
                 }
             )
-
             }
        
     )
