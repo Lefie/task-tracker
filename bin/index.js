@@ -15,6 +15,17 @@ const generate_id = (data) => {
     return length + 1 
 }
 
+
+// enum 
+const Status = {
+    Todo : Symbol("todo"),
+    Ip: Symbol("in-progress"),
+    Done: Symbol("done")
+}
+
+
+
+
 program
     .name('task-cli')
     .description('CLI to allow a user to add/delete/update/read tasks and their status')
@@ -38,7 +49,7 @@ program
             let task_obj = {
                 "id":id,
                 "description": task,
-                "status": "in-progress",
+                "status": Status.Todo, // the default status
                 "createdAt": new Date(),
                 "updatedAt": ""
             }
@@ -58,6 +69,8 @@ program
             }
        
     )
+
+
 
 
 program.parse()
