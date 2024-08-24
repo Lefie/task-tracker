@@ -86,7 +86,7 @@ program
         (task_id, description)=> {
 
             let exist = false  // a boolean variable which indicates if the task exists in the array 
-            
+
             // check if id exists by looping through the array 
             // if it exists, update the data object. 
             let data = require(fp)
@@ -116,8 +116,53 @@ program
           
     })
 
+program
+    .command("delete")
+    .description("delete a task by their id")
+    .argument("<task_id>","the id of the task that we want to delete")
+    .action(
+        (task_id) => {
 
+            // get data 
+            const data = require(fp)
+            
+            let index; // the index from which we need to start updating ids
+
+            let isFound = false; // indicate whether or not we found a matching id to delete
+
+            for (let i = 0; i < data.length; i++){
+                if (data[i].id == parseInt(task_id)){
+                    isFound = true;
+                    data.splice(i, 1);
+                    index = i;
+                }
+            }
+
+            // if an element is found, then we delete
+            if (isFound === true){
+                // update the ids
+                for ( let i = index; i < data.length; i++){
+                    data[i].id = i + 1;
+                }
+
+                fs.writeFile(
+                    fp,
+                    JSON.stringify(data),
+                    (err) => {
+                        if (err) throw err
+                        console.log("deleted! task id", task_id)
+                    }
+                )
+            }else {
+                console.log("did not find a matching task id")
+            }
+
+        }
+         
+    )
 
 program.parse()
+
+
 
 
