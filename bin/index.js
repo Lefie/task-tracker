@@ -81,14 +81,7 @@ program
             data.push(task_obj)
 
             // overwrite existing file
-            fs.writeFile(
-                fp,
-                JSON.stringify(data),
-                (err) => {
-                    if (err) throw err
-                    console.log("Task Added Successfully (ID: )", task_obj.id)
-                }
-            )
+            write_to_file("Add", JSON.stringify(data),task_obj.id)
             }
        
     )
@@ -118,15 +111,9 @@ program
                     exist = true 
                     data[i].description = description;
                     data[i].updatedAt = new Date() 
-                      
-                    fs.writeFile(
-                        fp,
-                        JSON.stringify(data),
-                        (err) => {
-                            if (err) throw err
-                            console.log("Task Updated Successfully (ID: )", data[i].id)
-                        }
-                    )
+
+                    write_to_file("update", JSON.stringify(data),task_id)
+                    
                 }
             }
   
@@ -167,14 +154,8 @@ program
                     data[i].id = i + 1;
                 }
 
-                fs.writeFile(
-                    fp,
-                    JSON.stringify(data),
-                    (err) => {
-                        if (err) throw err
-                        console.log("deleted! task id", task_id)
-                    }
-                )
+               
+                write_to_file("delete", JSON.stringify(data),task_id)
             }else {
                 console.log("did not find a matching task id")
             }
