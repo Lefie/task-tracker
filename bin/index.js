@@ -12,17 +12,39 @@ const program = new Command();
 
 
 // helper function 
+// this function generates a new id for the new task
 const generate_id = (data) => {
     length = data.length
     return length + 1 
 }
 
+// this function writes to the json file 
+const write_to_file = (task_name,data, task_id) => {
+    const exists = fs.existsSync(fp)
+    if (!exists){
+        fs.writeFileSync(fp,"[]")
+    }
+    
+    fs.writeFile(
+        fp,
+        data,
+        (err) => {
+            if (err) throw err
+            console.log(task_name + " success! task id", task_id)
+        }
+    )
+
+
+}
+
+
+
 
 // status enum 
 const Status = {
-    Todo : Symbol("todo"),
-    Ip: Symbol("in-progress"),
-    Done: Symbol("done")
+    Todo : "todo",
+    Ip: "in-progress",
+    Done: "done"
 }
 
 
@@ -95,8 +117,8 @@ program
                     // work on this 
                     exist = true 
                     data[i].description = description;
-                    data[i].updatedAt = new Date()                   
-
+                    data[i].updatedAt = new Date() 
+                      
                     fs.writeFile(
                         fp,
                         JSON.stringify(data),
@@ -159,6 +181,32 @@ program
 
         }
          
+    )
+
+program 
+    .command('mark-in-progress')
+    .description('mark a task as in progress')
+    .argument("<task-id","the id of the task to be marked as in progress")
+    .action(
+        (task_id) => {
+            
+            // get all the data 
+            const data = require(fp)
+
+            // make sure task id exists 
+            if (parseInt(task_id) <= data.length) {
+               let task_index = parseInt(task_id) - 1
+               let task = data[task_index]
+               
+               task.status = Status.Ip
+               task.updatedAt = new Date();
+
+               write_to_file("Mark In Progress", JSON.stringify(data),task_id)
+
+            }else {
+                console.log("task id does not exist")
+            }
+        }
     )
 
 program.parse()
