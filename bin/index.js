@@ -37,6 +37,25 @@ const write_to_file = (task_name,data, task_id) => {
 
 }
 
+// this helper function helps format the tasks on todo list nicely 
+const display_task = (id, description,status, createdAt, updatedAt  ) => {
+
+    created_year_and_date = createdAt.slice(0,10)
+    created_time = createdAt.slice(11,16)
+    created_formatted = created_year_and_date + " " + created_time
+
+    
+    updated_year_and_date = updatedAt.slice(0,10)
+    updated_time = updatedAt.slice(11,16)
+    updated_formatted = updated_year_and_date + " " + updated_time
+    
+    
+    console.log(
+       
+        `${id}        ${description}                  ${status}     ${created_formatted}     ${updated_formatted}`
+    )
+}
+
 
 
 
@@ -189,6 +208,45 @@ program
             }
         }
     )
+
+program
+    .command("mark-done")
+    .description("marking a task as done ")
+    .argument("<task-id","the id of a task to be marked as done")
+    .action(
+        (task_id) => {
+            const data = require(fp)
+
+             // make sure task id exists 
+             if (parseInt(task_id) <= data.length) {
+                let task_index = parseInt(task_id) - 1
+                let task = data[task_index]
+                
+                task.status = Status.Done
+                task.updatedAt = new Date();
+ 
+                write_to_file("Mark as Done", JSON.stringify(data),task_id)
+ 
+             }else {
+                 console.log("task id does not exist")
+             }
+        }
+    )
+
+program
+    .command('list')
+    .description('listing all the tasks')
+    .action(
+        () => {
+            const data = require(fp)
+            console.log( `   ID   |     Description   |     Status   |   Created At   |       Updated At    `)
+
+            data.forEach((task) => {
+                display_task(task.id, task.description, task.status, task.createdAt, task.updatedAt)
+            })
+                
+            })
+
 
 program.parse()
 
