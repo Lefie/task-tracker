@@ -239,14 +239,78 @@ program
     .action(
         () => {
             const data = require(fp)
-            console.log( `   ID   |     Description   |     Status   |   Created At   |       Updated At    `)
 
-            data.forEach((task) => {
-                display_task(task.id, task.description, task.status, task.createdAt, task.updatedAt)
-            })
+            if(data.length > 0) {
+                console.log( `   ID   |     Description   |     Status   |   Created At   |       Updated At    `)
+                data.forEach((task) => {
+                    display_task(task.id, task.description, task.status, task.createdAt, task.updatedAt)
+                })
+            }else {
+                console.log("You don't have any tasks! ")
+            }
+            
                 
             })
 
+program
+            .command('done')
+            .description('listing all the tasks that are done')
+            .action(
+                () => {
+                    const data = require(fp)
+                    const tasks_done = data.filter(
+                        (task) => {
+                            return task.status == Status.Done
+                        }
+                    )
+
+                    console.log("Tasks Done")
+                    tasks_done.forEach((task) => {
+                        display_task(task.id, task.description, task.status, task.createdAt, task.updatedAt)
+                    })
+
+                }
+                )
+
+program
+.command('in-progress')
+.description('listing all the tasks that are in progress')
+.action(
+    () => {
+        const data = require(fp)
+        const tasks_done = data.filter(
+            (task) => {
+                return task.status == Status.Ip
+            }
+        )
+
+        console.log("Tasks In Progress")
+        tasks_done.forEach((task) => {
+            display_task(task.id, task.description, task.status, task.createdAt, task.updatedAt)
+        })
+
+    }
+    )
+
+program
+.command('todo')
+.description('listing all the tasks that are on the todo list')
+.action(
+    () => {
+        const data = require(fp)
+        const tasks_done = data.filter(
+            (task) => {
+                return task.status == Status.Todo
+            }
+        )
+
+        console.log("Tasks TODO")
+        tasks_done.forEach((task) => {
+            display_task(task.id, task.description, task.status, task.createdAt, task.updatedAt)
+        })
+
+    }
+    )
 
 program.parse()
 
